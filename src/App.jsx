@@ -14,6 +14,7 @@ const DEFAULT_VALUES = {
   sxpRatio: '0.01',
   selectedPreset: '100000000',
   customFDV: '',
+  godhoodLevelBoost: '',
 }
 
 function sanitizeNumericInput(rawValue) {
@@ -32,6 +33,20 @@ function toSafePositiveNumber(value) {
   return parsed
 }
 
+function toSafeGodhoodLevel(value) {
+  if (!value || typeof value !== 'string') return 0
+  const parsed = Number(value)
+  if (!Number.isFinite(parsed) || parsed < 0) return 0
+  return Math.min(Math.floor(parsed), 30)
+}
+
+function getBoostPercent(level) {
+  if (level >= 1 && level <= 9) return 0.05
+  if (level >= 10 && level <= 19) return 0.1
+  if (level >= 20 && level <= 30) return 0.2
+  return 0
+}
+
 function getInitialState() {
   const params = new URLSearchParams(window.location.search)
   return {
@@ -41,6 +56,7 @@ function getInitialState() {
     sxpRatio: params.get('sxpRatio') ?? DEFAULT_VALUES.sxpRatio,
     selectedPreset: params.get('preset') ?? DEFAULT_VALUES.selectedPreset,
     customFDV: params.get('fdv') ?? DEFAULT_VALUES.customFDV,
+    godhoodLevelBoost: params.get('godhoodLevelBoost') ?? DEFAULT_VALUES.godhoodLevelBoost,
   }
 }
 
@@ -53,6 +69,7 @@ function App() {
   const [sxpRatio, setSxpRatio] = useState(initialState.sxpRatio)
   const [selectedPreset, setSelectedPreset] = useState(initialState.selectedPreset)
   const [customFDV, setCustomFDV] = useState(initialState.customFDV)
+  const [godhoodLevelBoost, setGodhoodLevelBoost] = useState(initialState.godhoodLevelBoost)
 
   const parsedValues = useMemo(
     () => ({
@@ -64,21 +81,27 @@ function App() {
         selectedPreset === 'custom'
           ? toSafePositiveNumber(customFDV)
           : toSafePositiveNumber(selectedPreset),
+      godhoodLevelBoostValue: toSafeGodhoodLevel(godhoodLevelBoost),
     }),
-    [sp, spRatio, sxp, sxpRatio, selectedPreset, customFDV]
+    [sp, spRatio, sxp, sxpRatio, selectedPreset, customFDV, godhoodLevelBoost]
   )
 
   const metrics = useMemo(() => {
     const tokensFromSP = parsedValues.spValue * parsedValues.spRatioValue
     const tokensFromSXP = parsedValues.sxpValue * parsedValues.sxpRatioValue
-    const totalTokens = tokensFromSP + tokensFromSXP
+    const baseTotalTokens = tokensFromSP + tokensFromSXP
+    const boostPercent = getBoostPercent(parsedValues.godhoodLevelBoostValue)
+    const finalTokens = baseTotalTokens * (1 + boostPercent)
     const tokenPrice = parsedValues.fdvValue / DEFAULT_TOTAL_SUPPLY
-    const allocationValue = totalTokens * tokenPrice
+    const allocationValue = finalTokens * tokenPrice
 
     return {
       tokensFromSP,
       tokensFromSXP,
-      totalTokens,
+      baseTotalTokens,
+      boostPercent,
+      finalTokens,
+      totalTokens: finalTokens,
       tokenPrice,
       allocationValue,
     }
@@ -92,10 +115,11 @@ function App() {
     if (sxpRatio) params.set('sxpRatio', sxpRatio)
     if (selectedPreset) params.set('preset', selectedPreset)
     if (customFDV) params.set('fdv', customFDV)
+    if (godhoodLevelBoost) params.set('godhoodLevelBoost', godhoodLevelBoost)
 
     const nextUrl = `${window.location.pathname}?${params.toString()}`
     window.history.replaceState(null, '', nextUrl)
-  }, [sp, spRatio, sxp, sxpRatio, selectedPreset, customFDV])
+  }, [sp, spRatio, sxp, sxpRatio, selectedPreset, customFDV, godhoodLevelBoost])
 
   return (
     <main className="relative min-h-screen overflow-hidden px-4 py-4 pb-8 sm:px-6 md:py-6 md:pb-10 lg:px-8">
@@ -120,6 +144,17 @@ function App() {
           setSelectedPreset={setSelectedPreset}
           customFDV={customFDV}
           setCustomFDV={(value) => setCustomFDV(sanitizeNumericInput(value))}
+          godhoodLevelBoost={godhoodLevelBoost}
+          setGodhoodLevelBoost={(value) => {
+            const digitsOnly = value.replace(/[^\d]/g, '')
+            if (!digitsOnly) {
+              setGodhoodLevelBoost('')
+              return
+            }
+
+            const clamped = Math.min(Number(digitsOnly), 30)
+            setGodhoodLevelBoost(String(clamped))
+          }}
         />
 
         <ResultsCard metrics={metrics} />

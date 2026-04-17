@@ -5,7 +5,14 @@ const PRESET_FDV_OPTIONS = [
   { label: '$500M', value: '500000000' },
 ]
 
-function FDVSelector({ selectedPreset, setSelectedPreset, customFDV, setCustomFDV }) {
+function FDVSelector({
+  selectedPreset,
+  setSelectedPreset,
+  customFDV,
+  setCustomFDV,
+  godhoodLevelBoost,
+  setGodhoodLevelBoost,
+}) {
   return (
     <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-4 backdrop-blur-xl transition-all duration-300 hover:border-white/25 md:p-5">
       <h2 className="font-['Sora'] text-lg font-semibold text-white">FDV Selection</h2>
@@ -44,6 +51,19 @@ function FDVSelector({ selectedPreset, setSelectedPreset, customFDV, setCustomFD
           />
         </label>
       </div>
+
+      <label className="mt-3 block space-y-2 md:mt-4">
+        <span className="text-xs uppercase tracking-[0.2em] text-neutral-500">Godhood ID Level Boost</span>
+        <input
+          value={godhoodLevelBoost}
+          onChange={(event) => setGodhoodLevelBoost(event.target.value)}
+          placeholder="Enter level 1-30"
+          inputMode="numeric"
+          min="1"
+          max="30"
+          className="w-full rounded-xl border border-[var(--card-border)] bg-black/50 px-4 py-3 text-sm text-white outline-none transition-all duration-300 placeholder:text-neutral-600 focus:border-white focus:shadow-[0_0_0_1px_rgba(255,255,255,0.35)]"
+        />
+      </label>
     </section>
   )
 }

@@ -50,6 +50,9 @@ function ResultsCard({ metrics }) {
         <ResultMetric label="Total Allocation" value={metrics.totalTokens} />
         <ResultMetric label="Token Price" value={metrics.tokenPrice} prefix="$" />
         <ResultMetric label="Total Value (USD)" value={metrics.allocationValue} prefix="$" />
+        <ResultMetric label="Base Tokens" value={metrics.baseTotalTokens} />
+        <ResultMetric label="Boost Percentage" value={metrics.boostPercent * 100} suffix="%" />
+        <ResultMetric label="Final Tokens" value={metrics.finalTokens} />
       </div>
     </section>
   )
