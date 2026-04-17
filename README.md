@@ -16,8 +16,6 @@ Live logic in the UI:
 - FDV presets ($50M–$500M) or custom FDV in USD
 - Real-time results: per-source tokens, total allocation, token price, total USD value
 - Input sanitization (non-negative values; empty fields treated safely)
-- Shareable state via URL query parameters (updates as you edit)
-- Dark, minimal black-and-white UI with a short in-app disclaimer at the bottom
 
 ## Tech stack
 
