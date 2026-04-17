@@ -19,6 +19,7 @@ const NFT_TIERS = [
 ]
 const inputClassName =
   'w-full rounded-xl border border-[var(--card-border)] bg-black/50 px-4 py-3 text-sm text-white outline-none transition-all duration-300 placeholder:text-neutral-600 focus:border-white focus:shadow-[0_0_0_1px_rgba(255,255,255,0.35)]'
+const checkboxClassName = 'selection-checkbox'
 
 function sanitizeNumericInput(rawValue) {
   const safe = rawValue.replace(/[^\d.]/g, '')
@@ -135,7 +136,7 @@ function FDVSelector({
                     type="checkbox"
                     checked={discordRoles[role.key]?.selected ?? false}
                     onChange={(event) => updateRole(role.key, 'selected', event.target.checked)}
-                    className="h-4 w-4 rounded border border-[var(--card-border)] bg-black/50 accent-white"
+                    className={checkboxClassName}
                   />
                   <span className="text-sm font-medium text-white">{role.label}</span>
                 </label>
@@ -178,7 +179,7 @@ function FDVSelector({
                     type="checkbox"
                     checked={nftTiers[tier.key]?.selected ?? false}
                     onChange={(event) => updateNftTier(tier.key, 'selected', event.target.checked)}
-                    className="h-4 w-4 rounded border border-[var(--card-border)] bg-black/50 accent-white"
+                    className={checkboxClassName}
                   />
                   <span className="text-sm font-medium text-white">{tier.label}</span>
                 </label>
