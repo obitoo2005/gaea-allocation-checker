@@ -53,6 +53,9 @@ function ResultsCard({ metrics }) {
         <ResultMetric label="Base Tokens" value={metrics.baseTotalTokens} />
         <ResultMetric label="Boost Percentage" value={metrics.boostPercent * 100} suffix="%" />
         <ResultMetric label="Final Tokens" value={metrics.finalTokens} />
+        <ResultMetric label="Tokens from Roles" value={metrics.roleTokens} />
+        <ResultMetric label="Tokens from NFTs" value={metrics.nftTokens} />
+        <ResultMetric label="Final Total Tokens" value={metrics.finalTotalTokens} />
       </div>
     </section>
   )
