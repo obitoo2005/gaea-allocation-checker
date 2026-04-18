@@ -39,8 +39,6 @@ Godhood boost tiers:
   - `Tier 4`
 - Real-time results for SP tokens, SXP tokens, base tokens, boost percentage, boosted tokens, role tokens, NFT tokens, final total tokens, token price, and total USD value
 - Input sanitization with safe handling for empty values and no negative numbers in calculations
-- Shareable state via URL query parameters (updates as you edit)
-- Dark, minimal black-and-white UI with a short in-app disclaimer at the bottom
 
 ## Tech stack
 
